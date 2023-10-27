@@ -64,10 +64,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 18,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w600,
-                height: 0.03,
+                height: 0.04,
               ),
             )),
             (action != null)
