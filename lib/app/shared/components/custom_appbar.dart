@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String iconLeading;
+  final String? iconLeading;
   final Function()? onTapLeading;
   final String? leadingSemanticsLabel;
   final String title;
@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const CustomAppBar(
       {Key? key,
-      required this.iconLeading,
+      this.iconLeading,
       this.leadingSemanticsLabel,
       this.onTapLeading,
       required this.title,
@@ -31,33 +31,37 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.all(15.0),
         child: Row(
           children: [
-            InkWell(
-              onTap: onTapLeading,
-              child: Container(
-                width: 35,
-                height: 35,
-                decoration: ShapeDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment(0.00, -1.00),
-                    end: Alignment(0, 1),
-                    colors: [Color(0xFF947CCD), Color(0xFF523D7F)],
+            (action != null)
+                ? InkWell(
+                    onTap: onTapLeading,
+                    child: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: ShapeDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment(0.00, -1.00),
+                          end: Alignment(0, 1),
+                          colors: [Color(0xFF947CCD), Color(0xFF523D7F)],
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SvgPicture.asset(
+                          iconLeading ?? '',
+                          width: 24,
+                          height: 24,
+                          semanticsLabel: leadingSemanticsLabel,
+                          colorFilter: const ColorFilter.mode(
+                              Color(0xffDEDDDD), BlendMode.srcIn),
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox.square(
+                    dimension: 35,
                   ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: SvgPicture.asset(
-                    iconLeading,
-                    width: 24,
-                    height: 24,
-                    semanticsLabel: leadingSemanticsLabel,
-                    colorFilter: const ColorFilter.mode(
-                        Color(0xffDEDDDD), BlendMode.srcIn),
-                  ),
-                ),
-              ),
-            ),
             Expanded(
                 child: Text(
               title,
