@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_today/app/modules/details/weather_week_screen.dart';
+import 'package:weather_today/app/modules/models/state_weather_forecast.dart';
 import 'package:weather_today/app/services/api_service.dart';
 import 'package:weather_today/app/shared/components/city_listing_card.dart';
 import 'package:weather_today/app/shared/components/custom_alert_dialog.dart';
@@ -18,21 +19,14 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
   List<Map<String, dynamic>> stateList = [];
 
-  Future<void> fetchInformacoesDoTempo() async {
-    setState(() {
-      _isLoading = true;
-    });
+  List<StateWeatherForecast> weekForecast = [];
 
+  Future<void> fetchStateWeatherForecasts() async {
+    setState(() => _isLoading = true);
     try {
-      final data = await WeatherAPI().fetchWeatherInformation();
+      weekForecast = await WeatherAPI().getStateWeatherForecasts();
 
-      // Check if the response contains 'result' and 'estados'
-      if (data.containsKey('result') && data['result'].containsKey('estados')) {
-        stateList = List<Map<String, dynamic>>.from(data['result']['estados']);
-      } else {
-        // Handle the case where the JSON structure is different from expected.
-        throw Exception('Invalid JSON structure');
-      }
+      setState(() {});
     } catch (error) {
       debugPrint(error.toString());
       if (!mounted) return;
@@ -42,14 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
           content:
               'Não foi possível buscar atualizações do tempo, tente novamente mais tarde');
     }
-    setState(() {
-      _isLoading = false;
-    });
+    setState(() => _isLoading = false);
   }
 
   @override
   void initState() {
-    fetchInformacoesDoTempo();
+    fetchStateWeatherForecasts();
 
     super.initState();
   }
@@ -68,19 +60,21 @@ class _HomeScreenState extends State<HomeScreen> {
           : Center(
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 20),
-                itemCount: stateList.length,
+                itemCount: weekForecast.length,
                 itemBuilder: (context, index) {
-                  final stateData = stateList[index];
-                  final cityName = stateData['estado'];
+                  final weatherForecastByCity = weekForecast[index];
 
                   return CityListingCard(
-                    cityName: cityName,
-                    weatherUrl: WeatherUtils.getWeatherImageUrl('Nublado'),
+                    cityName: weatherForecastByCity.estado,
+                    weatherUrl: WeatherUtils.getWeatherImageUrl(
+                        WeatherUtils.getDayPeriodWeather(
+                            weekForecast: weatherForecastByCity.previsoes[
+                                WeatherUtils.getCurrentDayOfWeek()])),
                     onTap: () => Navigator.push(
                       context,
                       PageRouteAnimated.slide(
                         screen: WeatherWeekScreen(
-                          state: cityName,
+                          state: weatherForecastByCity.estado,
                         ),
                       ),
                     ),
