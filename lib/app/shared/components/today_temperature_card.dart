@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:weather_today/app/shared/utils/weather_type.dart';
 
 class TodayTemperatureCard extends StatelessWidget {
-  final String weatherUrl;
+  final String weatherName;
   final String temperature;
 
   const TodayTemperatureCard({
     Key? key,
-    required this.weatherUrl,
+    required this.weatherName,
     required this.temperature,
   }) : super(key: key);
 
@@ -35,11 +36,11 @@ class TodayTemperatureCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            margin: const EdgeInsets.only(left: 21, top: 6, bottom: 32),
+            margin: const EdgeInsets.only(left: 21, top: 6, bottom: 6),
             constraints: const BoxConstraints(maxHeight: 125, maxWidth: 160),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(weatherUrl),
+                image: AssetImage(WeatherType.getWeatherImageUrl(weatherName)),
                 fit: BoxFit.contain,
               ),
             ),
