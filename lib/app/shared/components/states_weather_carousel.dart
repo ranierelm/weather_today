@@ -1,29 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:weather_today/app/modules/models/state_weather_forecast.dart';
 import 'package:weather_today/app/shared/utils/weather_utils.dart';
 
 class StatesWeatherCarousel extends StatelessWidget {
   final List<StateWeatherForecast> weatherByStates;
   const StatesWeatherCarousel({super.key, required this.weatherByStates});
-
-  int getCurrentDayOfWeek() {
-    final now = DateTime.now();
-    final formatter = DateFormat('EEEE', 'pt_BR');
-    final dayOfWeekString = formatter.format(now);
-
-    final dayOfWeekMap = {
-      'segunda': 0,
-      'terça': 1,
-      'quarta': 2,
-      'quinta': 3,
-      'sexta': 4,
-      'sábado': 5,
-      'domingo': 6,
-    };
-
-    return dayOfWeekMap[dayOfWeekString.toLowerCase()] ?? -1;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +60,8 @@ class StatesWeatherCarousel extends StatelessWidget {
                           image: AssetImage(WeatherUtils.getWeatherImageUrl(
                               WeatherUtils.getDayPeriodWeather(
                                   weekForecast: weatherByStates[index]
-                                      .previsoes[getCurrentDayOfWeek()]))),
+                                          .previsoes[
+                                      WeatherUtils.getCurrentDayOfWeek()]))),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -108,8 +90,8 @@ class StatesWeatherCarousel extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           WeatherUtils.getDayPeriodDegrees(
-                              weekForecast: weatherByStates[index]
-                                  .previsoes[getCurrentDayOfWeek()]),
+                              weekForecast: weatherByStates[index].previsoes[
+                                  WeatherUtils.getCurrentDayOfWeek()]),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
