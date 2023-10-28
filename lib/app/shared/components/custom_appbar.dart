@@ -31,9 +31,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.all(15.0),
         child: Row(
           children: [
-            (action != null)
+            (iconLeading != null)
                 ? InkWell(
                     onTap: onTapLeading,
+                    borderRadius: BorderRadius.circular(5),
                     child: Container(
                       width: 35,
                       height: 35,
