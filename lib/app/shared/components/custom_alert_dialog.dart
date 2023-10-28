@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog {
-  static Future<void> showAlertDialog(
+  static showAlertDialog(
     BuildContext context, {
     required String title,
     required String content,
