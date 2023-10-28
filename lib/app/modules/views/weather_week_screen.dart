@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_today/app/modules/details/weather_today_screen.dart';
+import 'package:weather_today/app/modules/views/weather_today_screen.dart';
 import 'package:weather_today/app/modules/models/weather_forecast.dart';
 import 'package:weather_today/app/services/api_service.dart';
 import 'package:weather_today/app/shared/components/background_scaffold.dart';

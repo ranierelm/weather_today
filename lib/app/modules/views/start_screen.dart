@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_today/app/modules/home/views/home_screen.dart';
+import 'package:weather_today/app/modules/views/home_screen.dart';
 import 'package:weather_today/app/shared/components/background_scaffold.dart';
 import 'package:weather_today/app/shared/components/footer_menu.dart';
 
