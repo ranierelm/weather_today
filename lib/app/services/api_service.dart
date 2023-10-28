@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:weather_today/app/modules/models/state_weather_forecast.dart';
 import 'package:weather_today/app/modules/models/weather_forecast.dart';
 
 class WeatherAPI {
@@ -45,5 +46,34 @@ class WeatherAPI {
     }
 
     return previsoes;
+  }
+
+  Future<List<StateWeatherForecast>> getStateWeatherForecasts() async {
+    dynamic json = await fetchWeatherInformation();
+    final estados = json['result']['estados'];
+    List<StateWeatherForecast> stateForecasts = [];
+
+    for (var estado in estados) {
+      String nomeEstado = estado['estado'];
+      var dias = estado['dias'][0];
+      List<WeatherForecast> previsoes = [];
+
+      for (var dia in dias.keys) {
+        var previsao = dias[dia][0];
+        previsoes.add(WeatherForecast(
+          dia: dia,
+          manha: previsao['manha'][0],
+          tarde: previsao['tarde'][0],
+          noite: previsao['noite'][0],
+        ));
+      }
+
+      stateForecasts.add(StateWeatherForecast(
+        estado: nomeEstado,
+        previsoes: previsoes,
+      ));
+    }
+
+    return stateForecasts;
   }
 }
