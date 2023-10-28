@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:weather_today/app/modules/models/weather_data.dart';
+import 'package:weather_today/app/modules/details/weather_week_screen.dart';
 import 'package:weather_today/app/services/api_service.dart';
 import 'package:weather_today/app/shared/components/city_listing_card.dart';
 import 'package:weather_today/app/shared/components/custom_appbar.dart';
 import 'package:weather_today/app/shared/utils/weather_type.dart';
+import 'package:weather_today/app/shared/widgets/page_route_animated.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isLoading = false;
-  List<StateData> stateList = []; // Lista de dados dos estados
+  List<Map<String, dynamic>> stateList = [];
 
   Future<void> fetchInformacoesDoTempo() async {
     setState(() {
@@ -23,8 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final data = await WeatherAPI().fetchWeatherInformation();
-      // Preencha a lista de stateList com os dados retornados da API.
-      stateList = data.states;
+
+      // Check if the response contains 'result' and 'estados'
+      if (data.containsKey('result') && data['result'].containsKey('estados')) {
+        stateList = List<Map<String, dynamic>>.from(data['result']['estados']);
+      } else {
+        // Handle the case where the JSON structure is different from expected.
+        throw Exception('Invalid JSON structure');
+      }
     } catch (error) {
       debugPrint(error.toString());
       if (!mounted) return;
@@ -54,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     fetchInformacoesDoTempo();
+
     super.initState();
   }
 
@@ -70,14 +78,23 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : Center(
               child: ListView.builder(
-                itemCount: stateList.length, // Número de itens na lista
+                padding: const EdgeInsets.only(bottom: 20),
+                itemCount: stateList.length,
                 itemBuilder: (context, index) {
                   final stateData = stateList[index];
-                  final cityName = stateData.state;
+                  final cityName = stateData['estado'];
 
                   return CityListingCard(
                     cityName: cityName,
-                    weatherUrl: WeatherType.getImageUrl('cloudy'),
+                    weatherUrl: WeatherType.getWeatherImageUrl('Nublado'),
+                    onTap: () => Navigator.push(
+                      context,
+                      PageRouteAnimated.slide(
+                        screen: WeatherWeekScreen(
+                          state: cityName,
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
