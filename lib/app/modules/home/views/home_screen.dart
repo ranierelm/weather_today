@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.0),
           ),
-          title: const Text(
+          content: const Text(
               'Não foi possível buscar atualizações do tempo, tente novamente mais tarde'),
           actions: [
             TextButton(
