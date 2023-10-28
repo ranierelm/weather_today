@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:weather_today/app/modules/details/weather_week_screen.dart';
 import 'package:weather_today/app/services/api_service.dart';
 import 'package:weather_today/app/shared/components/city_listing_card.dart';
+import 'package:weather_today/app/shared/components/custom_alert_dialog.dart';
 import 'package:weather_today/app/shared/components/custom_appbar.dart';
-import 'package:weather_today/app/shared/utils/weather_type.dart';
+import 'package:weather_today/app/shared/utils/weather_utils.dart';
 import 'package:weather_today/app/shared/widgets/page_route_animated.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,22 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
       debugPrint(error.toString());
       if (!mounted) return;
 
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.0),
-          ),
-          content: const Text(
-              'Não foi possível buscar atualizações do tempo, tente novamente mais tarde'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
+      CustomDialog.showAlertDialog(context,
+          title: 'Atenção',
+          content:
+              'Não foi possível buscar atualizações do tempo, tente novamente mais tarde');
     }
     setState(() {
       _isLoading = false;
@@ -86,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return CityListingCard(
                     cityName: cityName,
-                    weatherUrl: WeatherType.getWeatherImageUrl('Nublado'),
+                    weatherUrl: WeatherUtils.getWeatherImageUrl('Nublado'),
                     onTap: () => Navigator.push(
                       context,
                       PageRouteAnimated.slide(
