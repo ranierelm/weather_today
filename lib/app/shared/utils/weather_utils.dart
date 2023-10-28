@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:weather_today/app/modules/models/weather_forecast.dart';
 
 class WeatherUtils {
@@ -62,5 +63,23 @@ class WeatherUtils {
           ? weekForecast!.noite['tempo'].toString()
           : weekForecasts[index!].noite['tempo'].toString();
     }
+  }
+
+  static int getCurrentDayOfWeek() {
+    final now = DateTime.now();
+    final formatter = DateFormat('EEEE', 'pt_BR');
+    final dayOfWeekString = formatter.format(now);
+
+    final dayOfWeekMap = {
+      'segunda': 0,
+      'terça': 1,
+      'quarta': 2,
+      'quinta': 3,
+      'sexta': 4,
+      'sábado': 5,
+      'domingo': 6,
+    };
+
+    return dayOfWeekMap[dayOfWeekString.toLowerCase()] ?? -1;
   }
 }
