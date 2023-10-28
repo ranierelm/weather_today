@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weather_today/app/shared/utils/weather_type.dart';
+import 'package:weather_today/app/shared/utils/weather_utils.dart';
 
 class TodayTemperatureCard extends StatelessWidget {
   final String weatherName;
@@ -40,7 +40,7 @@ class TodayTemperatureCard extends StatelessWidget {
             constraints: const BoxConstraints(maxHeight: 125, maxWidth: 160),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(WeatherType.getWeatherImageUrl(weatherName)),
+                image: AssetImage(WeatherUtils.getWeatherImageUrl(weatherName)),
                 fit: BoxFit.contain,
               ),
             ),

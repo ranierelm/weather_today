@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_today/app/modules/details/weather_today_screen.dart';
 import 'package:weather_today/app/modules/models/weather_forecast.dart';
 import 'package:weather_today/app/services/api_service.dart';
 import 'package:weather_today/app/shared/components/background_scaffold.dart';
+import 'package:weather_today/app/shared/components/custom_alert_dialog.dart';
 import 'package:weather_today/app/shared/components/custom_appbar.dart';
 import 'package:weather_today/app/shared/components/temperature_days_week_card.dart';
 import 'package:weather_today/app/shared/components/today_temperature_card.dart';
 import 'package:weather_today/app/shared/utils/formats.dart';
+import 'package:weather_today/app/shared/utils/weather_utils.dart';
+import 'package:weather_today/app/shared/widgets/page_route_animated.dart';
 
 class WeatherWeekScreen extends StatefulWidget {
   final String state;
@@ -31,27 +34,14 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
       debugPrint(error.toString());
       if (!mounted) return;
 
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.0),
-          ),
-          content: const Text(
-              'Não foi possível buscar atualizações do tempo, tente novamente mais tarde'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
+      CustomDialog.showAlertDialog(context,
+          title: 'Atenção',
+          content:
+              'Não foi possível buscar atualizações do tempo, tente novamente mais tarde');
     }
   }
 
   Future<String> getCurrentDayOfWeek() async {
-    await initializeDateFormatting('pt_BR');
     final now = DateTime.now();
     final formatter = DateFormat('EEEE', 'pt_BR');
     return formatter.format(now);
@@ -85,32 +75,6 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
   void initState() {
     _getData();
     super.initState();
-  }
-
-  String getDayPeriodDegrees(int index) {
-    final now = DateTime.now();
-    final hour = now.hour;
-
-    if (hour >= 6 && hour < 12) {
-      return weekForecast[index].manha['graus'].toString();
-    } else if (hour >= 12 && hour < 18) {
-      return weekForecast[index].tarde['graus'].toString();
-    } else {
-      return weekForecast[index].noite['graus'].toString();
-    }
-  }
-
-  String getDayPeriodWeather(int index) {
-    final now = DateTime.now();
-    final hour = now.hour;
-
-    if (hour >= 6 && hour < 12) {
-      return weekForecast[index].manha['tempo'].toString();
-    } else if (hour >= 12 && hour < 18) {
-      return weekForecast[index].tarde['tempo'].toString();
-    } else {
-      return weekForecast[index].noite['tempo'].toString();
-    }
   }
 
   @override
@@ -160,15 +124,27 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                           ListView.builder(
                             shrinkWrap: true,
                             itemCount: weekForecast.length,
+                            physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               final dia = weekForecast[index].dia;
-                              final tempo = getDayPeriodWeather(index);
-                              final graus = getDayPeriodDegrees(index);
+                              final tempo = WeatherUtils.getDayPeriodWeather(
+                                  weekForecasts: weekForecast, index: index);
+                              final graus = WeatherUtils.getDayPeriodDegrees(
+                                  weekForecasts: weekForecast, index: index);
 
                               return TemperatureDaysWeekCard(
                                 dayWeek: dia,
                                 weatherName: tempo,
                                 temperature: graus,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  PageRouteAnimated.slide(
+                                    screen: WeatherTodayScreen(
+                                      state: widget.state,
+                                      weatherToday: weekForecast[index],
+                                    ),
+                                  ),
+                                ),
                               );
                             },
                           )

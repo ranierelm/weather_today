@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:weather_today/app/shared/utils/formats.dart';
-import 'package:weather_today/app/shared/utils/weather_type.dart';
+import 'package:weather_today/app/shared/utils/weather_utils.dart';
 
 class TemperatureDaysWeekCard extends StatelessWidget {
   final String dayWeek;
@@ -49,7 +49,7 @@ class TemperatureDaysWeekCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
-                            WeatherType.getWeatherImageUrl(weatherName)),
+                            WeatherUtils.getWeatherImageUrl(weatherName)),
                         fit: BoxFit.contain,
                       ),
                     ),
