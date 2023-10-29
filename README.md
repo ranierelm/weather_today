@@ -20,7 +20,9 @@ Weather Today App is a mobile application built using the Flutter framework. It 
 
 ## Screenshots
 
-![Weather Today App Screenshots](assets/screenshots/Screenshot2023-10-28at22.57.16.png) | ![Weather Today App Screenshots](assets/screenshots/Screenshot2023-10-28at22.57.33.png) | ![Weather Today App Screenshots](assets/screenshots/Screenshot2023-10-28at22.57.49.png)
+| ![Weather Today App Screenshots](assets/screenshots/Screenshot2023-10-28at22.57.16.png) | ![Weather Today App Screenshots](assets/screenshots/Screenshot2023-10-28at22.57.33.png) | ![Weather Today App Screenshots](assets/screenshots/Screenshot2023-10-28at22.57.49.png) |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+
 
 ## Installation
 
