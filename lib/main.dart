@@ -9,11 +9,9 @@ void main() async {
 
   await initializeDateFormatting('pt_BR');
   runApp(
-    MaterialApp(
-      home: ChangeNotifierProvider(
-        create: (context) => AppProvider(),
-        child: const MyApp(),
-      ),
+    ChangeNotifierProvider(
+      create: (context) => AppProvider(),
+      child: const MyApp(),
     ),
   );
 }
