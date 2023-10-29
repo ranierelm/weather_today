@@ -115,12 +115,14 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                                 ),
                           const SizedBox(height: 10),
                           TodayTemperatureCard(
-                            weatherName: todayForecast!.manha['tempo'],
+                            weatherName: WeatherUtils.getDayPeriodWeather(
+                                weekForecast: todayForecast),
                             temperature: todayForecast == null
                                 ? '23'
-                                : todayForecast!.manha['graus'].toString(),
+                                : WeatherUtils.getDayPeriodDegrees(
+                                    weekForecast: todayForecast),
                           ),
-                          const SizedBox(height: 56),
+                          const SizedBox(height: 45),
                           ListView.builder(
                             shrinkWrap: true,
                             itemCount: weekForecast.length,
