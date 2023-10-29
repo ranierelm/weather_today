@@ -10,11 +10,13 @@ class AppProvider extends ChangeNotifier {
   bool _isLoading = false;
   List<StateWeatherForecast> _stateWeekForecast = [];
   List<WeatherForecast> _weekForecast = [];
+  WeatherForecast? _selectedForecastDay;
 
   String? get error => _error;
   bool get isLoading => _isLoading;
   List<StateWeatherForecast> get stateWeekForecast => _stateWeekForecast;
   List<WeatherForecast> get weekForecast => _weekForecast;
+  WeatherForecast? get selectedForecastDay => _selectedForecastDay;
 
   Future<void> fetchStateWeatherForecasts() async {
     _isLoading = true;
@@ -76,6 +78,23 @@ class AppProvider extends ChangeNotifier {
     }
     _isLoading = false;
 
+    notifyListeners();
+  }
+
+  getDateToday() {
+    final now = DateTime.now();
+    final formatter = DateFormat("d 'de' MMMM 'de' y", 'pt_BR');
+
+    return formatter.format(now);
+  }
+
+  void removeStateWeatherForecastByName() {
+    stateWeekForecast
+        .removeWhere((forecast) => forecast.estado == selectedState);
+  }
+
+  void setSelectedForecastDay(WeatherForecast day) {
+    _selectedForecastDay = day;
     notifyListeners();
   }
 }

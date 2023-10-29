@@ -105,20 +105,22 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                                   index: index);
 
                               return TemperatureDaysWeekCard(
-                                dayWeek: dia,
-                                weatherName: tempo,
-                                temperature: graus,
-                                onTap: () => Navigator.push(
-                                  context,
-                                  PageRouteAnimated.slide(
-                                    screen: WeatherTodayScreen(
-                                      state: selectedState ?? '',
-                                      weatherToday:
-                                          appProvider.weekForecast[index],
-                                    ),
-                                  ),
-                                ),
-                              );
+                                  dayWeek: dia,
+                                  weatherName: tempo,
+                                  temperature: graus,
+                                  onTap: () {
+                                    Provider.of<AppProvider>(context,
+                                            listen: false)
+                                        .setSelectedForecastDay(
+                                            appProvider.weekForecast[index]);
+
+                                    Navigator.push(
+                                      context,
+                                      PageRouteAnimated.slide(
+                                        screen: const WeatherTodayScreen(),
+                                      ),
+                                    );
+                                  });
                             },
                           )
                         ],
