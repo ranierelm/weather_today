@@ -55,127 +55,140 @@ class _WeatherTodayScreenState extends State<WeatherTodayScreen> {
               return CustomDialog.showAlertDialog(context,
                   title: 'Atenção', content: appProvider.error ?? '');
             } else {
-              return SizedBox(
-                width: double.infinity,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        FormatUtils.capitalize(
-                            appProvider.selectedForecastDay!.dia),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xFFDEDDDD),
-                          fontSize: 12,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      Container(
-                        constraints:
-                            const BoxConstraints(maxHeight: 125, maxWidth: 160),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(WeatherUtils.getWeatherImageUrl(
-                                WeatherUtils.getDayPeriodWeather(
-                                    weekForecast:
-                                        appProvider.selectedForecastDay))),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Column(
+              return RawScrollbar(
+                thumbColor: Colors.white60,
+                thickness: 3,
+                radius: const Radius.circular(8),
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: 95,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  WeatherUtils.getDayPeriodDegrees(
-                                      weekForecast:
-                                          appProvider.selectedForecastDay),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 81,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Container(
-                                  width: 16,
-                                  height: 16,
-                                  margin: const EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        width: 3, color: Colors.white),
-                                  ),
-                                  // margin: const EdgeInsets.only(bottom: 50),
-                                  alignment: Alignment.topCenter,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 5),
                           Text(
-                            dateToday,
+                            FormatUtils.capitalize(
+                                appProvider.selectedForecastDay!.dia),
+                            textAlign: TextAlign.center,
                             style: const TextStyle(
                               color: Color(0xFFDEDDDD),
                               fontSize: 12,
                               fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 44),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Hoje',
-                              style: TextStyle(
-                                color: Color(0xFFDEDDDD),
-                                fontSize: 12,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
+                          ),
+                          const SizedBox(height: 18),
+                          Container(
+                            constraints: const BoxConstraints(
+                                maxHeight: 125, maxWidth: 160),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    WeatherUtils.getWeatherImageUrl(
+                                        WeatherUtils.getDayPeriodWeather(
+                                            weekForecast: appProvider
+                                                .selectedForecastDay))),
+                                fit: BoxFit.contain,
                               ),
                             ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ),
+                          const SizedBox(height: 5),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 95,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      WeatherUtils.getDayPeriodDegrees(
+                                          weekForecast:
+                                              appProvider.selectedForecastDay),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 81,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      margin: const EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            width: 3, color: Colors.white),
+                                      ),
+                                      // margin: const EdgeInsets.only(bottom: 50),
+                                      alignment: Alignment.topCenter,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                dateToday,
+                                style: const TextStyle(
+                                  color: Color(0xFFDEDDDD),
+                                  fontSize: 12,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 34),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                WeatherByTimeOfDayCard(
-                                  time: 'Manhã',
-                                  weatherForecast:
-                                      appProvider.selectedForecastDay!.manha,
+                                const Text(
+                                  'Hoje',
+                                  style: TextStyle(
+                                    color: Color(0xFFDEDDDD),
+                                    fontSize: 12,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                                WeatherByTimeOfDayCard(
-                                  time: 'Tarde',
-                                  weatherForecast:
-                                      appProvider.selectedForecastDay!.tarde,
-                                ),
-                                WeatherByTimeOfDayCard(
-                                  time: 'Noite',
-                                  weatherForecast:
-                                      appProvider.selectedForecastDay!.noite,
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    WeatherByTimeOfDayCard(
+                                      time: 'Manhã',
+                                      weatherForecast: appProvider
+                                          .selectedForecastDay!.manha,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    WeatherByTimeOfDayCard(
+                                      time: 'Tarde',
+                                      weatherForecast: appProvider
+                                          .selectedForecastDay!.tarde,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    WeatherByTimeOfDayCard(
+                                      time: 'Noite',
+                                      weatherForecast: appProvider
+                                          .selectedForecastDay!.noite,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 44),
-                      StatesWeatherCarousel(
-                        weatherByStates: appProvider.stateWeekForecast,
-                      ),
-                    ]),
+                          ),
+                          const SizedBox(height: 44),
+                          StatesWeatherCarousel(
+                            weatherByStates: appProvider.stateWeekForecast,
+                          ),
+                          const SizedBox(height: 24),
+                        ]),
+                  ),
+                ),
               );
             }
           },

@@ -23,7 +23,8 @@ class CityListingCard extends StatelessWidget {
             margin: const EdgeInsets.only(left: 15, right: 8),
             child: Align(
               child: Container(
-                width: 321,
+                width: MediaQuery.of(context).size.width -
+                    96, // Define a largura baseada no tamanho da tela
                 height: 90,
                 padding: const EdgeInsets.only(left: 34, top: 29),
                 decoration: ShapeDecoration(

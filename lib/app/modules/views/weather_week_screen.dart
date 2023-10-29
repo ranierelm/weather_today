@@ -56,77 +56,83 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
               return CustomDialog.showAlertDialog(context,
                   title: 'Atenção', content: appProvider.error ?? '');
             } else {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          (appProvider.selectedTodayForecast == null)
-                              ? const SizedBox()
-                              : Text(
-                                  FormatUtils.capitalize(
-                                      appProvider.selectedTodayForecast!.dia),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Color(0xFFDEDDDD),
-                                    fontSize: 18,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
+              return RawScrollbar(
+                thumbColor: Colors.white60,
+                thickness: 3,
+                radius: const Radius.circular(8),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            (appProvider.selectedTodayForecast == null)
+                                ? const SizedBox()
+                                : Text(
+                                    FormatUtils.capitalize(
+                                        appProvider.selectedTodayForecast!.dia),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Color(0xFFDEDDDD),
+                                      fontSize: 18,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                          const SizedBox(height: 10),
-                          TodayTemperatureCard(
-                            weatherName: WeatherUtils.getDayPeriodWeather(
-                                weekForecast:
-                                    appProvider.selectedTodayForecast),
-                            temperature:
-                                appProvider.selectedTodayForecast == null
-                                    ? '23'
-                                    : WeatherUtils.getDayPeriodDegrees(
-                                        weekForecast:
-                                            appProvider.selectedTodayForecast),
-                          ),
-                          const SizedBox(height: 45),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: appProvider.weekForecast.length,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              final dia = appProvider.weekForecast[index].dia;
-                              final tempo = WeatherUtils.getDayPeriodWeather(
-                                  weekForecasts: appProvider.weekForecast,
-                                  index: index);
-                              final graus = WeatherUtils.getDayPeriodDegrees(
-                                  weekForecasts: appProvider.weekForecast,
-                                  index: index);
+                            const SizedBox(height: 10),
+                            TodayTemperatureCard(
+                              weatherName: WeatherUtils.getDayPeriodWeather(
+                                  weekForecast:
+                                      appProvider.selectedTodayForecast),
+                              temperature: appProvider.selectedTodayForecast ==
+                                      null
+                                  ? '23'
+                                  : WeatherUtils.getDayPeriodDegrees(
+                                      weekForecast:
+                                          appProvider.selectedTodayForecast),
+                            ),
+                            const SizedBox(height: 32),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: appProvider.weekForecast.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              itemBuilder: (context, index) {
+                                final dia = appProvider.weekForecast[index].dia;
+                                final tempo = WeatherUtils.getDayPeriodWeather(
+                                    weekForecasts: appProvider.weekForecast,
+                                    index: index);
+                                final graus = WeatherUtils.getDayPeriodDegrees(
+                                    weekForecasts: appProvider.weekForecast,
+                                    index: index);
 
-                              return TemperatureDaysWeekCard(
-                                  dayWeek: dia,
-                                  weatherName: tempo,
-                                  temperature: graus,
-                                  onTap: () {
-                                    Provider.of<AppProvider>(context,
-                                            listen: false)
-                                        .setSelectedForecastDay(
-                                            appProvider.weekForecast[index]);
+                                return TemperatureDaysWeekCard(
+                                    dayWeek: dia,
+                                    weatherName: tempo,
+                                    temperature: graus,
+                                    onTap: () {
+                                      Provider.of<AppProvider>(context,
+                                              listen: false)
+                                          .setSelectedForecastDay(
+                                              appProvider.weekForecast[index]);
 
-                                    Navigator.push(
-                                      context,
-                                      PageRouteAnimated.slide(
-                                        screen: const WeatherTodayScreen(),
-                                      ),
-                                    );
-                                  });
-                            },
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                                      Navigator.push(
+                                        context,
+                                        PageRouteAnimated.slide(
+                                          screen: const WeatherTodayScreen(),
+                                        ),
+                                      );
+                                    });
+                              },
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             }

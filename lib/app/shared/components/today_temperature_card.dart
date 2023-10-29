@@ -16,7 +16,8 @@ class TodayTemperatureCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       alignment: AlignmentDirectional.center,
-      width: 387,
+      width: MediaQuery.of(context).size.width -
+          30, // Define a largura baseada no tamanho da tela
       height: 170,
       decoration: ShapeDecoration(
         gradient: LinearGradient(
@@ -62,14 +63,11 @@ class TodayTemperatureCard extends StatelessWidget {
                 Container(
                   width: 10,
                   height: 80,
-
                   decoration: BoxDecoration(
-                    shape:
-                        BoxShape.circle, // Usamos um círculo em vez de um oval
+                    shape: BoxShape.circle,
                     border: Border.all(width: 2, color: Colors.white),
                   ),
-                  margin: const EdgeInsets.only(
-                      right: 46, bottom: 50), // Espaçamento à esquerda
+                  margin: const EdgeInsets.only(right: 46, bottom: 50),
                   alignment: Alignment.topCenter,
                 ),
               ],

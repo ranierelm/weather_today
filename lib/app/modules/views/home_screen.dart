@@ -41,34 +41,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: 'Atenção', content: appProvider.error ?? '');
           } else {
             return Center(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 20),
-                itemCount: appProvider.stateWeekForecast.length,
-                itemBuilder: (context, index) {
-                  final weatherForecastByCity =
-                      appProvider.stateWeekForecast[index];
+              child: RawScrollbar(
+                thumbColor: Colors.white60,
+                thickness: 3,
+                radius: const Radius.circular(8),
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  itemCount: appProvider.stateWeekForecast.length,
+                  itemBuilder: (context, index) {
+                    final weatherForecastByCity =
+                        appProvider.stateWeekForecast[index];
 
-                  return CityListingCard(
-                    cityName: weatherForecastByCity.estado,
-                    weatherUrl: WeatherUtils.getWeatherImageUrl(
-                      WeatherUtils.getDayPeriodWeather(
-                        weekForecast: weatherForecastByCity
-                            .previsoes[WeatherUtils.getCurrentDayOfWeek()],
-                      ),
-                    ),
-                    onTap: () {
-                      Provider.of<AppProvider>(context, listen: false)
-                          .setSelectedState(weatherForecastByCity.estado);
-
-                      Navigator.push(
-                        context,
-                        PageRouteAnimated.slide(
-                          screen: const WeatherWeekScreen(),
+                    return CityListingCard(
+                      cityName: weatherForecastByCity.estado,
+                      weatherUrl: WeatherUtils.getWeatherImageUrl(
+                        WeatherUtils.getDayPeriodWeather(
+                          weekForecast: weatherForecastByCity
+                              .previsoes[WeatherUtils.getCurrentDayOfWeek()],
                         ),
-                      );
-                    },
-                  );
-                },
+                      ),
+                      onTap: () {
+                        Provider.of<AppProvider>(context, listen: false)
+                            .setSelectedState(weatherForecastByCity.estado);
+
+                        Navigator.push(
+                          context,
+                          PageRouteAnimated.slide(
+                            screen: const WeatherWeekScreen(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             );
           }
