@@ -14,7 +14,7 @@ class WeatherUtils {
         return 'assets/images/weather_images/sol.png';
       case 'tempestade':
         return 'assets/images/weather_images/tempestade.png';
-      case 'trovao':
+      case 'trovão':
         return 'assets/images/weather_images/trovao.png';
       default:
         return 'assets/images/weather_images/nublado.png';
