@@ -43,9 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return Center(
               child: ListView.builder(
                 padding: const EdgeInsets.only(bottom: 20),
-                itemCount: appProvider.weekForecast.length,
+                itemCount: appProvider.stateWeekForecast.length,
                 itemBuilder: (context, index) {
-                  final weatherForecastByCity = appProvider.weekForecast[index];
+                  final weatherForecastByCity =
+                      appProvider.stateWeekForecast[index];
 
                   return CityListingCard(
                     cityName: weatherForecastByCity.estado,
@@ -55,14 +56,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             .previsoes[WeatherUtils.getCurrentDayOfWeek()],
                       ),
                     ),
-                    onTap: () => Navigator.push(
-                      context,
-                      PageRouteAnimated.slide(
-                        screen: WeatherWeekScreen(
-                          state: weatherForecastByCity.estado,
+                    onTap: () {
+                      Provider.of<AppProvider>(context, listen: false)
+                          .setSelectedState(weatherForecastByCity.estado);
+
+                      Navigator.push(
+                        context,
+                        PageRouteAnimated.slide(
+                          screen: const WeatherWeekScreen(),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 },
               ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:weather_today/app/modules/controllers/app_provider.dart';
 import 'package:weather_today/app/modules/views/weather_today_screen.dart';
-import 'package:weather_today/app/modules/models/weather_forecast.dart';
-import 'package:weather_today/app/services/api_service.dart';
 import 'package:weather_today/app/shared/components/background_scaffold.dart';
 import 'package:weather_today/app/shared/components/custom_alert_dialog.dart';
 import 'package:weather_today/app/shared/components/custom_appbar.dart';
+import 'package:weather_today/app/shared/components/loading_component.dart';
 import 'package:weather_today/app/shared/components/temperature_days_week_card.dart';
 import 'package:weather_today/app/shared/components/today_temperature_card.dart';
 import 'package:weather_today/app/shared/utils/formats.dart';
@@ -13,67 +13,27 @@ import 'package:weather_today/app/shared/utils/weather_utils.dart';
 import 'package:weather_today/app/shared/widgets/page_route_animated.dart';
 
 class WeatherWeekScreen extends StatefulWidget {
-  final String state;
-
-  const WeatherWeekScreen({super.key, required this.state});
+  const WeatherWeekScreen({
+    super.key,
+  });
 
   @override
   State<WeatherWeekScreen> createState() => _WeatherWeekScreenState();
 }
 
 class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
-  bool _isLoading = false;
-
-  List<WeatherForecast> weekForecast = [];
-  WeatherForecast? todayForecast;
-
-  Future<void> fetchWeekForecast() async {
-    try {
-      weekForecast = await WeatherAPI().getWeekWeatheByState(widget.state);
-    } catch (error) {
-      debugPrint(error.toString());
-      if (!mounted) return;
-
-      CustomDialog.showAlertDialog(context,
-          title: 'Atenção',
-          content:
-              'Não foi possível buscar atualizações do tempo, tente novamente mais tarde');
-    }
-  }
-
-  Future<String> getCurrentDayOfWeek() async {
-    final now = DateTime.now();
-    final formatter = DateFormat('EEEE', 'pt_BR');
-    return formatter.format(now);
-  }
-
-// previsão de acordo com o dia da semana atual
-  findTodayForecast() async {
-    String currentDay = await getCurrentDayOfWeek();
-
-    String currentDayFormatted = FormatUtils.removeAccent(currentDay);
-    for (final forecast in weekForecast) {
-      if (forecast.dia.toLowerCase() == currentDayFormatted.toLowerCase()) {
-        todayForecast = forecast;
-        return forecast;
-      }
-    }
-  }
-
-  _getData() async {
-    setState(() {
-      _isLoading = true;
-    });
-    await fetchWeekForecast();
-    await findTodayForecast();
-    setState(() {
-      _isLoading = false;
-    });
-  }
+  String? selectedState;
 
   @override
   void initState() {
-    _getData();
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    selectedState = appProvider.selectedState;
+
+    if (selectedState != null) {
+      appProvider.fetchWeekForecast().then((_) {
+        appProvider.findTodayForecast();
+      });
+    }
     super.initState();
   }
 
@@ -88,11 +48,15 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
           leadingSemanticsLabel: 'Button to return to the previous page',
           iconLeading: 'assets/icons/arrow-left-thin.svg',
         ),
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : SingleChildScrollView(
+        body: Consumer<AppProvider>(
+          builder: (context, appProvider, child) {
+            if (appProvider.isLoading) {
+              return const Center(child: LoadingComponent());
+            } else if (appProvider.error != null) {
+              return CustomDialog.showAlertDialog(context,
+                  title: 'Atenção', content: appProvider.error ?? '');
+            } else {
+              return SingleChildScrollView(
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
@@ -101,10 +65,11 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          (todayForecast == null)
+                          (appProvider.selectedTodayForecast == null)
                               ? const SizedBox()
                               : Text(
-                                  FormatUtils.capitalize(todayForecast!.dia),
+                                  FormatUtils.capitalize(
+                                      appProvider.selectedTodayForecast!.dia),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Color(0xFFDEDDDD),
@@ -116,23 +81,28 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                           const SizedBox(height: 10),
                           TodayTemperatureCard(
                             weatherName: WeatherUtils.getDayPeriodWeather(
-                                weekForecast: todayForecast),
-                            temperature: todayForecast == null
-                                ? '23'
-                                : WeatherUtils.getDayPeriodDegrees(
-                                    weekForecast: todayForecast),
+                                weekForecast:
+                                    appProvider.selectedTodayForecast),
+                            temperature:
+                                appProvider.selectedTodayForecast == null
+                                    ? '23'
+                                    : WeatherUtils.getDayPeriodDegrees(
+                                        weekForecast:
+                                            appProvider.selectedTodayForecast),
                           ),
                           const SizedBox(height: 45),
                           ListView.builder(
                             shrinkWrap: true,
-                            itemCount: weekForecast.length,
+                            itemCount: appProvider.weekForecast.length,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              final dia = weekForecast[index].dia;
+                              final dia = appProvider.weekForecast[index].dia;
                               final tempo = WeatherUtils.getDayPeriodWeather(
-                                  weekForecasts: weekForecast, index: index);
+                                  weekForecasts: appProvider.weekForecast,
+                                  index: index);
                               final graus = WeatherUtils.getDayPeriodDegrees(
-                                  weekForecasts: weekForecast, index: index);
+                                  weekForecasts: appProvider.weekForecast,
+                                  index: index);
 
                               return TemperatureDaysWeekCard(
                                 dayWeek: dia,
@@ -142,8 +112,9 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                                   context,
                                   PageRouteAnimated.slide(
                                     screen: WeatherTodayScreen(
-                                      state: widget.state,
-                                      weatherToday: weekForecast[index],
+                                      state: selectedState ?? '',
+                                      weatherToday:
+                                          appProvider.weekForecast[index],
                                     ),
                                   ),
                                 ),
@@ -155,7 +126,10 @@ class _WeatherWeekScreenState extends State<WeatherWeekScreen> {
                     )
                   ],
                 ),
-              ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
