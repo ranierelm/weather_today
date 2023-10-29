@@ -132,7 +132,7 @@ class _WeatherTodayScreenState extends State<WeatherTodayScreen> {
                           )
                         ],
                       ),
-                      const SizedBox(height: 63),
+                      const SizedBox(height: 44),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         child: Column(
