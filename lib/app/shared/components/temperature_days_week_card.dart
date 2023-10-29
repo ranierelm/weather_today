@@ -22,7 +22,7 @@ class TemperatureDaysWeekCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+        margin: const EdgeInsets.symmetric(horizontal: 15),
         child: Row(
           children: [
             Expanded(
